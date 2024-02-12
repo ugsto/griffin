@@ -6,8 +6,12 @@ use config::{
     strategies::{cli_loader::PartialConfigCliLoader, env_loader::PartialConfigEnvLoader},
     traits::PartialConfigLoader,
 };
+use fuzzer::strategies::cyrillic::CyrillicFuzzer;
+
+use crate::fuzzer::traits::Fuzzer;
 
 mod config;
+mod fuzzer;
 
 fn load_config() -> Result<Config, ConfigError> {
     let partial_config = PartialConfigEnvLoader::load()?.merge(PartialConfigCliLoader::load()?);
@@ -22,5 +26,8 @@ fn main() {
         exit(1)
     });
 
-    println!("{:?}", config);
+    let fuzzer = CyrillicFuzzer::new();
+    for domain in fuzzer.fuzz(config.domain.as_str()) {
+        println!("{}", domain);
+    }
 }
