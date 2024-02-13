@@ -6,6 +6,9 @@ use crate::config::traits::PartialConfigLoader;
 pub struct PartialConfigCliLoader {
     #[arg()]
     domain: Option<String>,
+
+    #[arg(short, long)]
+    workers: Option<usize>,
 }
 
 impl PartialConfigLoader for PartialConfigCliLoader {
@@ -14,6 +17,7 @@ impl PartialConfigLoader for PartialConfigCliLoader {
 
         Ok(crate::config::models::PartialConfig {
             domain: args.domain,
+            workers: args.workers,
         })
     }
 }

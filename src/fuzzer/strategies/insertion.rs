@@ -13,8 +13,8 @@ impl InsertionFuzzer {
 }
 
 impl Fuzzer for InsertionFuzzer {
-    fn fuzz<'a>(&'a self, domain: &'a str) -> impl Iterator<Item = String> + 'a {
-        domain.char_indices().flat_map(move |(i, c)| {
+    fn fuzz<'a>(&'a self, domain: &'a str) -> Box<dyn Iterator<Item = String> + 'a> {
+        let iterator = domain.char_indices().flat_map(move |(i, c)| {
             static EMPTY: &Vec<char> = &Vec::new();
             let insertions = self.map.get(&c).unwrap_or(EMPTY);
 
@@ -30,7 +30,9 @@ impl Fuzzer for InsertionFuzzer {
                     ),
                 ]
             })
-        })
+        });
+
+        Box::new(iterator)
     }
 }
 

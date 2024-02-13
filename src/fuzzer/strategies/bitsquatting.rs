@@ -17,8 +17,8 @@ fn is_valid_character(c: char) -> bool {
 }
 
 impl Fuzzer for BitsquattingFuzzer {
-    fn fuzz<'a>(&'a self, domain: &'a str) -> impl Iterator<Item = String> + 'a {
-        domain.char_indices().flat_map(move |(i, c)| {
+    fn fuzz<'a>(&'a self, domain: &'a str) -> Box<dyn Iterator<Item = String> + 'a> {
+        let iterator = domain.char_indices().flat_map(move |(i, c)| {
             (0..8).filter_map(move |shift| {
                 let mask = 1 << shift;
                 let b = ((c as u8) ^ mask) as char;
@@ -29,7 +29,9 @@ impl Fuzzer for BitsquattingFuzzer {
 
                 Some(format!("{}{}{}", &domain[..i], b, &domain[i + 1..]))
             })
-        })
+        });
+
+        Box::new(iterator)
     }
 }
 

@@ -13,8 +13,8 @@ impl MapFuzzer {
 }
 
 impl Fuzzer for MapFuzzer {
-    fn fuzz<'a>(&'a self, domain: &'a str) -> impl Iterator<Item = String> + 'a {
-        domain
+    fn fuzz<'a>(&'a self, domain: &'a str) -> Box<dyn Iterator<Item = String> + 'a> {
+        let iterator = domain
             .chars()
             .map(move |c| {
                 static EMPTY: Vec<&'static str> = Vec::new();
@@ -22,7 +22,9 @@ impl Fuzzer for MapFuzzer {
                 std::iter::once(c.to_string()).chain(alternatives.iter().map(|s| s.to_string()))
             })
             .multi_cartesian_product()
-            .map(|strings| strings.concat())
+            .map(|strings| strings.concat());
+
+        Box::new(iterator)
     }
 }
 

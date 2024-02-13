@@ -55,7 +55,7 @@ impl QwertzTypoFuzzer {
 }
 
 impl Fuzzer for QwertzTypoFuzzer {
-    fn fuzz<'a>(&'a self, domain: &'a str) -> impl Iterator<Item = String> + 'a {
+    fn fuzz<'a>(&'a self, domain: &'a str) -> Box<dyn Iterator<Item = String> + 'a> {
         self.insertion_fuzzer.fuzz(domain)
     }
 }

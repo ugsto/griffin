@@ -9,11 +9,13 @@ impl HyphenFuzzer {
 }
 
 impl Fuzzer for HyphenFuzzer {
-    fn fuzz<'a>(&'a self, domain: &'a str) -> impl Iterator<Item = String> + 'a {
-        domain
+    fn fuzz<'a>(&'a self, domain: &'a str) -> Box<dyn Iterator<Item = String> + 'a> {
+        let iterator = domain
             .char_indices()
             .skip(1)
-            .map(|(i, c)| format!("{}-{}{}", &domain[..i], c, &domain[i + 1..]))
+            .map(|(i, c)| format!("{}-{}{}", &domain[..i], c, &domain[i + 1..]));
+
+        Box::new(iterator)
     }
 }
 
