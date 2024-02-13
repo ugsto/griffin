@@ -5,7 +5,10 @@ pub struct BitsquattingFuzzerStrategy;
 
 impl DomainFuzzer for BitsquattingFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
-        Box::new(domain.domain().char_indices().flat_map(move |(i, c)| {
+        let domain_str = domain.domain();
+        let tld = domain.top_level_domain();
+
+        Box::new(domain_str.char_indices().flat_map(move |(i, c)| {
             (0..8).filter_map(move |shift| {
                 let mask = 1 << shift;
                 let new_char = ((c as u8) ^ mask) as char;
@@ -20,10 +23,10 @@ impl DomainFuzzer for BitsquattingFuzzerStrategy {
 
                 Some(format!(
                     "{}{}{}.{}",
-                    &domain.domain()[..i],
+                    &domain_str[..i],
                     new_char,
-                    &domain.domain()[i + 1..],
-                    domain.top_level_domain()
+                    &domain_str[i + 1..],
+                    tld
                 ))
             })
         }))

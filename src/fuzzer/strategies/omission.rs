@@ -4,14 +4,14 @@ pub struct OmissionFuzzerStrategy;
 
 impl DomainFuzzer for OmissionFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
-        Box::new(domain.domain().char_indices().map(move |(i, _)| {
-            format!(
-                "{}{}.{}",
-                &domain.domain()[..i],
-                &domain.domain()[i + 1..],
-                domain.top_level_domain()
-            )
-        }))
+        let domain_str = domain.domain();
+        let tld = domain.top_level_domain();
+
+        Box::new(
+            domain_str
+                .char_indices()
+                .map(move |(i, _)| format!("{}{}.{}", &domain_str[..i], &domain_str[i + 1..], tld)),
+        )
     }
 }
 

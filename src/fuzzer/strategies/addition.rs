@@ -4,10 +4,13 @@ pub struct AdditionFuzzerStrategy;
 
 impl DomainFuzzer for AdditionFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
+        let domain_str = domain.domain();
+        let tld = domain.top_level_domain();
+
         Box::new(
             ('0'..='9')
                 .chain('a'..='z')
-                .map(move |c| format!("{}{}.{}", domain.domain(), c, domain.top_level_domain())),
+                .map(move |c| format!("{}{}.{}", domain_str, c, tld)),
         )
     }
 }

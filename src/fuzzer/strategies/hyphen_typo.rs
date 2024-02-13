@@ -3,14 +3,11 @@ pub struct HyphenTypoFuzzerStrategy;
 
 impl DomainFuzzer for HyphenTypoFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
-        Box::new(domain.domain().char_indices().skip(1).map(move |(i, c)| {
-            format!(
-                "{}-{}{}.{}",
-                &domain.domain()[..i],
-                c,
-                &domain.domain()[i + 1..],
-                domain.top_level_domain()
-            )
+        let domain_str = domain.domain();
+        let tld = domain.top_level_domain();
+
+        Box::new(domain_str.char_indices().skip(1).map(move |(i, c)| {
+            format!("{}-{}{}.{}", &domain_str[..i], c, &domain_str[i + 1..], tld)
         }))
     }
 }
