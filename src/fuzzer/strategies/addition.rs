@@ -14,9 +14,8 @@ impl DomainFuzzer for AdditionFuzzerStrategy {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
-
     use super::*;
+    use std::collections::HashSet;
 
     #[test]
     fn test_addition_fuzzer_with_simple_domain() {
