@@ -3,7 +3,6 @@ use std::process::exit;
 use config::prelude::*;
 use domain::prelude::*;
 use futures::{stream, StreamExt};
-use fuzzer::traits::Fuzzer;
 use resolver::DomainResolver;
 
 mod config;
@@ -18,8 +17,8 @@ fn load_config() -> Result<Config, ConfigError> {
     Ok(config)
 }
 
-fn initialize_domains_iterators() -> Vec<Box<dyn Fuzzer>> {
-    vec![]
+fn initialize_domains_iterators(domain: &Domain) -> impl Iterator<Item = String> {
+    std::iter::once(String::from(domain))
 }
 
 #[tokio::main]
@@ -34,10 +33,7 @@ async fn main() {
         exit(1)
     });
 
-    let iterators = initialize_domains_iterators();
-    let domains_iterator = iterators
-        .iter()
-        .flat_map(|fuzzer| fuzzer.fuzz(&config.domain))
+    let domains_iterator = initialize_domains_iterators(&config.domain)
         .filter_map(|domain| Domain::try_from(domain.as_str()).ok());
 
     let mut tasks = stream::iter(domains_iterator.map(move |domain| {
