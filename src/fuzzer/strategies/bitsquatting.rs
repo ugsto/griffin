@@ -45,7 +45,7 @@ mod tests {
         let domain = "ab.com";
         let permutations = fuzzer.fuzz(domain).collect::<Vec<String>>();
 
-        let expected = vec![
+        let expected = [
             "cb.com", "eb.com", "ib.com", "qb.com", "ac.com", "af.com", "aj.com", "ar.com",
             "abncom", "ab.bom", "ab.aom", "ab.gom", "ab.kom", "ab.som", "ab.cnm", "ab.cmm",
             "ab.ckm", "ab.cgm", "ab.col", "ab.coo", "ab.coi", "ab.coe", "ab.co-",
@@ -54,11 +54,11 @@ mod tests {
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-        assert_eq!(permutations.len(), expected.len());
         assert_eq!(
-            HashSet::<String>::from_iter(permutations),
-            HashSet::<String>::from_iter(expected)
+            HashSet::<_>::from_iter(&permutations),
+            HashSet::<_>::from_iter(&expected)
         );
+        assert_eq!(permutations.len(), expected.len());
     }
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
         let domain = "1a.com";
         let permutations = fuzzer.fuzz(domain).collect::<Vec<String>>();
 
-        let expected = vec![
+        let expected = [
             "0a.com", "3a.com", "5a.com", "9a.com", "qa.com", "1c.com", "1e.com", "1i.com",
             "1q.com", "1ancom", "1a.bom", "1a.aom", "1a.gom", "1a.kom", "1a.som", "1a.cnm",
             "1a.cmm", "1a.ckm", "1a.cgm", "1a.col", "1a.coo", "1a.coi", "1a.coe", "1a.co-",
@@ -76,11 +76,11 @@ mod tests {
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-        assert_eq!(permutations.len(), expected.len());
         assert_eq!(
-            HashSet::<String>::from_iter(permutations),
-            HashSet::<String>::from_iter(expected)
+            HashSet::<_>::from_iter(&permutations),
+            HashSet::<_>::from_iter(&expected)
         );
+        assert_eq!(permutations.len(), expected.len());
     }
 
     #[test]
@@ -89,7 +89,7 @@ mod tests {
         let domain = "-a.com";
         let permutations = fuzzer.fuzz(domain).collect::<Vec<String>>();
 
-        let expected = vec![
+        let expected = [
             "ma.com", "-c.com", "-e.com", "-i.com", "-q.com", "-ancom", "-a.bom", "-a.aom",
             "-a.gom", "-a.kom", "-a.som", "-a.cnm", "-a.cmm", "-a.ckm", "-a.cgm", "-a.col",
             "-a.coo", "-a.coi", "-a.coe", "-a.co-",
@@ -98,11 +98,11 @@ mod tests {
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-        assert_eq!(permutations.len(), expected.len());
         assert_eq!(
-            HashSet::<String>::from_iter(permutations),
-            HashSet::<String>::from_iter(expected)
+            HashSet::<_>::from_iter(&permutations),
+            HashSet::<_>::from_iter(&expected)
         );
+        assert_eq!(permutations.len(), expected.len());
     }
 
     #[test]
@@ -111,7 +111,7 @@ mod tests {
         let domain = "a$.com";
         let permutations = fuzzer.fuzz(domain).collect::<Vec<String>>();
 
-        let expected = vec![
+        let expected = [
             "c$.com", "e$.com", "i$.com", "q$.com", "a4.com", "ad.com", "a$ncom", "a$.bom",
             "a$.aom", "a$.gom", "a$.kom", "a$.som", "a$.cnm", "a$.cmm", "a$.ckm", "a$.cgm",
             "a$.col", "a$.coo", "a$.coi", "a$.coe", "a$.co-",
@@ -120,10 +120,10 @@ mod tests {
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-        assert_eq!(permutations.len(), expected.len());
         assert_eq!(
-            HashSet::<String>::from_iter(permutations),
-            HashSet::<String>::from_iter(expected)
+            HashSet::<_>::from_iter(&permutations),
+            HashSet::<_>::from_iter(&expected)
         );
+        assert_eq!(permutations.len(), expected.len());
     }
 }
