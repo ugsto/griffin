@@ -1,14 +1,15 @@
 use super::errors::ConfigError;
+use crate::domain::prelude::*;
 
 #[derive(Debug)]
 pub struct Config {
-    pub domain: String,
+    pub domain: Domain,
     pub workers: usize,
 }
 
 #[derive(Debug)]
 pub struct PartialConfig {
-    pub domain: Option<String>,
+    pub domain: Option<Domain>,
     pub workers: Option<usize>,
 }
 

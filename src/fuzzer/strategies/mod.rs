@@ -1,9 +1,0 @@
-pub mod azerty_typo;
-pub mod bitsquatting;
-pub mod cyrillic;
-pub mod homoglyph;
-pub mod hyphen;
-pub mod insertion;
-pub mod map;
-pub mod qwerty_typo;
-pub mod qwertz_typo;

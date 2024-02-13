@@ -1,21 +1,12 @@
 use std::process::exit;
 
-use crate::fuzzer::traits::Fuzzer;
-use config::{
-    errors::ConfigError,
-    models::Config,
-    strategies::{cli_loader::PartialConfigCliLoader, env_loader::PartialConfigEnvLoader},
-    traits::PartialConfigLoader,
-};
+use config::prelude::*;
 use futures::{stream, StreamExt};
-use fuzzer::{
-    azerty_typo::AzertyTypoFuzzer, bitsquatting::BitsquattingFuzzer, cyrillic::CyrillicFuzzer,
-    homoglyph::HomoglyphFuzzer, hyphen::HyphenFuzzer, qwerty_typo::QwertyTypoFuzzer,
-    qwertz_typo::QwertzTypoFuzzer,
-};
+use fuzzer::traits::Fuzzer;
 use resolver::DomainResolver;
 
 mod config;
+mod domain;
 mod fuzzer;
 mod resolver;
 
@@ -27,15 +18,7 @@ fn load_config() -> Result<Config, ConfigError> {
 }
 
 fn initialize_domains_iterators() -> Vec<Box<dyn Fuzzer>> {
-    vec![
-        Box::new(BitsquattingFuzzer::new()),
-        Box::new(CyrillicFuzzer::new()),
-        Box::new(HomoglyphFuzzer::new()),
-        Box::new(HyphenFuzzer::new()),
-        Box::new(AzertyTypoFuzzer::new()),
-        Box::new(QwertyTypoFuzzer::new()),
-        Box::new(QwertzTypoFuzzer::new()),
-    ]
+    vec![]
 }
 
 #[tokio::main]
@@ -44,6 +27,8 @@ async fn main() {
         eprintln!("{}", err);
         exit(1)
     });
+
+    println!("Domain: {:?}", config.domain);
 
     let domain_resolver = DomainResolver::try_new().unwrap_or_else(|err| {
         eprintln!("{}", err);

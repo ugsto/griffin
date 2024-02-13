@@ -11,6 +11,7 @@ impl PartialConfigLoader for PartialConfigEnvLoader {
                     ConfigError::ParseError(
                         "Environment variable 'GRIFFIN_WORKERS'".to_string(),
                         "usize".to_string(),
+                        "Value is not a number".to_string(),
                     )
                 })
             })

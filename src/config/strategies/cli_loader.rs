@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::config::traits::PartialConfigLoader;
+use crate::{config::traits::PartialConfigLoader, domain::prelude::*, ConfigError, PartialConfig};
 
 #[derive(Parser, Debug)]
 pub struct PartialConfigCliLoader {
@@ -12,11 +12,18 @@ pub struct PartialConfigCliLoader {
 }
 
 impl PartialConfigLoader for PartialConfigCliLoader {
-    fn load() -> Result<crate::config::models::PartialConfig, crate::config::errors::ConfigError> {
+    fn load() -> Result<PartialConfig, ConfigError> {
         let args = Self::parse();
+        let domain = args
+            .domain
+            .map(|d| Domain::try_from(d.as_str()))
+            .transpose()
+            .map_err(|e| {
+                ConfigError::ParseError("domain".to_string(), "Domain".to_string(), e.to_string())
+            })?;
 
         Ok(crate::config::models::PartialConfig {
-            domain: args.domain,
+            domain,
             workers: args.workers,
         })
     }
