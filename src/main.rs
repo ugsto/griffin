@@ -28,8 +28,6 @@ async fn main() {
         exit(1)
     });
 
-    println!("Domain: {:?}", config.domain);
-
     let domain_resolver = DomainResolver::try_new().unwrap_or_else(|err| {
         eprintln!("{}", err);
         exit(1)
