@@ -1,6 +1,7 @@
 use std::process::exit;
 
 use config::prelude::*;
+use domain::prelude::*;
 use futures::{stream, StreamExt};
 use fuzzer::traits::Fuzzer;
 use resolver::DomainResolver;
@@ -36,7 +37,8 @@ async fn main() {
     let iterators = initialize_domains_iterators();
     let domains_iterator = iterators
         .iter()
-        .flat_map(|fuzzer| fuzzer.fuzz(&config.domain));
+        .flat_map(|fuzzer| fuzzer.fuzz(&config.domain))
+        .filter_map(|domain| Domain::try_from(domain.as_str()).ok());
 
     let mut tasks = stream::iter(domains_iterator.map(move |domain| {
         let inner_domain_resolver = domain_resolver.clone();

@@ -3,6 +3,8 @@ use trust_dns_resolver::{
     AsyncResolver,
 };
 
+use crate::domain::prelude::Domain;
+
 #[derive(Debug, Clone)]
 pub struct DomainResolver {
     resolver: AsyncResolver<GenericConnector<TokioRuntimeProvider>>,
@@ -17,9 +19,35 @@ impl DomainResolver {
         Ok(domain_resolver)
     }
 
-    pub async fn does_domain_resolve(&self, domain: &str) -> bool {
-        let resolver = self.resolver.clone();
+    pub async fn does_domain_resolve(&self, domain: &Domain) -> bool {
+        self.resolver
+            .lookup_ip(String::from(domain).as_str())
+            .await
+            .is_ok()
+    }
+}
 
-        resolver.lookup_ip(domain).await.is_ok()
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_does_domain_resolve() {
+        let domain = Domain::try_from("google.com").unwrap();
+        let resolver = DomainResolver::try_new().unwrap();
+
+        assert!(resolver.does_domain_resolve(&domain).await);
+    }
+
+    #[tokio::test]
+    async fn test_not_does_domain_resolve() {
+        let domain = Domain {
+            top_level_domain: "invalidy".to_string(),
+            domain: "idontexist".to_string(),
+            subdomain: vec![],
+        };
+        let resolver = DomainResolver::try_new().unwrap();
+
+        assert!(!resolver.does_domain_resolve(&domain).await);
     }
 }
