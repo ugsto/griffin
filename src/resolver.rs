@@ -41,11 +41,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_not_does_domain_resolve() {
-        let domain = Domain {
-            top_level_domain: "invalidy".to_string(),
-            domain: "idontexist".to_string(),
-            subdomain: vec![],
-        };
+        let domain = Domain::try_from("idontexist.invalidy").unwrap();
         let resolver = DomainResolver::try_new().unwrap();
 
         assert!(!resolver.does_domain_resolve(&domain).await);

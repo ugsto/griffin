@@ -4,13 +4,10 @@ pub struct AdditionFuzzerStrategy;
 
 impl DomainFuzzer for AdditionFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
-        let tld = &domain.top_level_domain;
-        let base_domain = domain.base_domain();
-
         Box::new(
             ('0'..='9')
                 .chain('a'..='z')
-                .map(move |c| format!("{base_domain}{c}.{tld}")),
+                .map(move |c| format!("{}{}.{}", domain.domain(), c, domain.top_level_domain())),
         )
     }
 }
@@ -23,11 +20,7 @@ mod tests {
 
     #[test]
     fn test_addition_fuzzer_with_simple_domain() {
-        let domain = Domain {
-            top_level_domain: "com".to_string(),
-            domain: "example".to_string(),
-            subdomain: Vec::new(),
-        };
+        let domain = Domain::try_from("example.com").unwrap();
 
         let fuzz = AdditionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
         let expected = [
@@ -81,11 +74,7 @@ mod tests {
 
     #[test]
     fn test_addition_fuzzer_with_subdomain() {
-        let domain = Domain {
-            top_level_domain: "com".to_string(),
-            domain: "example".to_string(),
-            subdomain: vec!["sub".to_string()],
-        };
+        let domain = Domain::try_from("sub.example.com").unwrap();
 
         let fuzz = AdditionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
         let expected = [
