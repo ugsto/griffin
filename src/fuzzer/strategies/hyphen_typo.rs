@@ -6,8 +6,18 @@ impl DomainFuzzer for HyphenTypoFuzzerStrategy {
         let domain_str = domain.domain();
         let tld = domain.top_level_domain();
 
-        Box::new(domain_str.char_indices().skip(1).map(move |(i, c)| {
-            format!("{}-{}{}.{}", &domain_str[..i], c, &domain_str[i + 1..], tld)
+        Box::new(domain_str.char_indices().skip(1).filter_map(move |(i, c)| {
+            if domain_str.get(i..=i) == Some("-") {
+                return None;
+            }
+
+            Some(format!(
+                "{}-{}{}.{}",
+                &domain_str[..i],
+                c,
+                &domain_str[i + 1..],
+                tld
+            ))
         }))
     }
 }
@@ -58,6 +68,30 @@ mod tests {
             "s-ub.example.com",
             "sub.exa-mple.com",
             "sub.examp-le.com",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
+
+        assert_eq!(
+            HashSet::<&String>::from_iter(&fuzz),
+            HashSet::<&String>::from_iter(&expected)
+        );
+        assert_eq!(fuzz.len(), expected.len());
+    }
+
+    #[test]
+    fn test_hyphen_typo_fuzzer_shouldnt_repeat() {
+        let domain = Domain::try_from("exampl-e.com").unwrap();
+
+        let fuzz = HyphenTypoFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let expected = [
+            "e-xampl-e.com",
+            "ex-ampl-e.com",
+            "exa-mpl-e.com",
+            "exam-pl-e.com",
+            "examp-l-e.com",
+            "exampl--e.com",
         ]
         .iter()
         .map(|s| s.to_string())

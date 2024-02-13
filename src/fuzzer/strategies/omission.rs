@@ -7,11 +7,18 @@ impl DomainFuzzer for OmissionFuzzerStrategy {
         let domain_str = domain.domain();
         let tld = domain.top_level_domain();
 
-        Box::new(
-            domain_str
-                .char_indices()
-                .map(move |(i, _)| format!("{}{}.{}", &domain_str[..i], &domain_str[i + 1..], tld)),
-        )
+        Box::new(domain_str.char_indices().filter_map(move |(i, c)| {
+            if domain_str.get(i + 1..=i + 1) == Some(&c.to_string()) {
+                return None;
+            }
+
+            Some(format!(
+                "{}{}.{}",
+                &domain_str[..i],
+                &domain_str[i + 1..],
+                tld
+            ))
+        }))
     }
 }
 
@@ -62,6 +69,31 @@ mod tests {
             "sub.exampe.com",
             "sb.example.com",
             "su.example.com",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
+
+        assert_eq!(
+            HashSet::<&String>::from_iter(&fuzz),
+            HashSet::<&String>::from_iter(&expected)
+        );
+        assert_eq!(fuzz.len(), expected.len());
+    }
+
+    #[test]
+    fn test_omission_fuzzer_shouldnt_repeat() {
+        let domain = Domain::try_from("eexample.com").unwrap();
+
+        let fuzz = OmissionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let expected = [
+            "example.com",
+            "eeample.com",
+            "eexmple.com",
+            "eexaple.com",
+            "eexamle.com",
+            "eexampe.com",
+            "eexampl.com",
         ]
         .iter()
         .map(|s| s.to_string())
