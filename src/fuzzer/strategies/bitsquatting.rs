@@ -5,7 +5,7 @@ pub struct BitsquattingFuzzerStrategy;
 
 impl DomainFuzzer for BitsquattingFuzzerStrategy {
     fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
-        let iterator = domain.domain().char_indices().flat_map(move |(i, c)| {
+        Box::new(domain.domain().char_indices().flat_map(move |(i, c)| {
             (0..8).filter_map(move |shift| {
                 let mask = 1 << shift;
                 let new_char = ((c as u8) ^ mask) as char;
@@ -26,9 +26,7 @@ impl DomainFuzzer for BitsquattingFuzzerStrategy {
                     domain.top_level_domain()
                 ))
             })
-        });
-
-        Box::new(iterator)
+        }))
     }
 }
 
@@ -146,6 +144,23 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect::<Vec<_>>();
+
+        assert_eq!(
+            HashSet::<&String>::from_iter(&fuzz),
+            HashSet::<&String>::from_iter(&expected)
+        );
+        assert_eq!(fuzz.len(), expected.len());
+    }
+
+    #[test]
+    fn test_bitsquatting_fuzzer_with_single_char() {
+        let domain = Domain::try_from("x.com").unwrap();
+
+        let fuzz = BitsquattingFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let expected = ["p.com", "8.com", "y.com", "z.com", "h.com"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect::<Vec<_>>();
 
         assert_eq!(
             HashSet::<&String>::from_iter(&fuzz),

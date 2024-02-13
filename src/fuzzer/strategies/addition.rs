@@ -125,4 +125,27 @@ mod tests {
         );
         assert_eq!(fuzz.len(), expected.len());
     }
+
+    #[test]
+    fn test_addition_fuzzer_with_single_char() {
+        let domain = Domain::try_from("x.com").unwrap();
+
+        let fuzz = AdditionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let expected = [
+            "x0.com", "x1.com", "x2.com", "x3.com", "x4.com", "x5.com", "x6.com", "x7.com",
+            "x8.com", "x9.com", "xa.com", "xb.com", "xc.com", "xd.com", "xe.com", "xf.com",
+            "xg.com", "xh.com", "xi.com", "xj.com", "xk.com", "xl.com", "xm.com", "xn.com",
+            "xo.com", "xp.com", "xq.com", "xr.com", "xs.com", "xt.com", "xu.com", "xv.com",
+            "xw.com", "xx.com", "xy.com", "xz.com",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
+
+        assert_eq!(
+            HashSet::<&String>::from_iter(&fuzz),
+            HashSet::<&String>::from_iter(&expected)
+        );
+        assert_eq!(fuzz.len(), expected.len());
+    }
 }
