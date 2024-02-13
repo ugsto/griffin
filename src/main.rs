@@ -6,7 +6,7 @@ use config::{
     strategies::{cli_loader::PartialConfigCliLoader, env_loader::PartialConfigEnvLoader},
     traits::PartialConfigLoader,
 };
-use fuzzer::strategies::homoglyph::HomoglyphFuzzer;
+use fuzzer::strategies::qwerty_typo::QwertyTypoFuzzer;
 
 use crate::fuzzer::traits::Fuzzer;
 
@@ -26,7 +26,7 @@ fn main() {
         exit(1)
     });
 
-    let fuzzer = HomoglyphFuzzer::new();
+    let fuzzer = QwertyTypoFuzzer::new();
     for domain in fuzzer.fuzz(config.domain.as_str()) {
         println!("{}", domain);
     }
