@@ -22,7 +22,6 @@ impl TryFrom<&str> for Domain {
         let subdomain = if parts.len() > 2 {
             parts[..parts.len() - 2]
                 .iter()
-                .rev()
                 .map(|s| s.to_string())
                 .collect()
         } else {
@@ -65,7 +64,7 @@ mod tests {
         let domain = Domain::try_from(domain_str).unwrap();
         assert_eq!(domain.top_level_domain, "com");
         assert_eq!(domain.domain, "example");
-        assert_eq!(domain.subdomain, vec!["c", "b", "a"]);
+        assert_eq!(domain.subdomain, vec!["a", "b", "c"]);
     }
 
     #[test]
