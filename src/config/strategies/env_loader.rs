@@ -16,10 +16,18 @@ impl PartialConfigLoader for PartialConfigEnvLoader {
                 })
             })
             .transpose()?;
+        let fuzzers = std::env::var("GRIFFIN_FUZZERS").ok().map(|v| {
+            v.split(',')
+                .map(|s| s.trim())
+                .filter(|s| !s.is_empty())
+                .map(|s| s.to_string())
+                .collect::<Vec<_>>()
+        });
 
         Ok(crate::config::models::PartialConfig {
             domain: None,
             workers,
+            fuzzers,
         })
     }
 }

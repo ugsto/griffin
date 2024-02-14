@@ -1,24 +1,20 @@
 use std::process::exit;
 
-use config::prelude::*;
-use domain::prelude::*;
-use futures::{stream, StreamExt};
-use resolver::DomainResolver;
+use config::{
+    errors::ConfigError,
+    models::Config,
+    prelude::*,
+    strategies::{cli_loader::PartialConfigCliLoader, env_loader::PartialConfigEnvLoader},
+};
+use griffin::{prelude::*, scan, DomainResolver};
 
 mod config;
-mod domain;
-mod fuzzer;
-mod resolver;
 
 fn load_config() -> Result<Config, ConfigError> {
     let partial_config = PartialConfigEnvLoader::load()?.merge(PartialConfigCliLoader::load()?);
     let config = Config::try_from(partial_config)?;
 
     Ok(config)
-}
-
-fn initialize_domains_iterators(domain: &Domain) -> impl Iterator<Item = String> {
-    std::iter::once(String::from(domain))
 }
 
 #[tokio::main]
@@ -33,21 +29,17 @@ async fn main() {
         exit(1)
     });
 
-    let domains_iterator = initialize_domains_iterators(&config.domain)
-        .filter_map(|domain| Domain::try_from(domain.as_str()).ok());
+    let fuzzer_refs = config.fuzzers.iter().collect::<Vec<_>>();
 
-    let mut tasks = stream::iter(domains_iterator.map(move |domain| {
-        let inner_domain_resolver = domain_resolver.clone();
-        tokio::spawn(async move {
-            (
-                inner_domain_resolver.does_domain_resolve(&domain).await,
-                domain,
-            )
-        })
-    }))
-    .buffer_unordered(config.workers);
+    let mut results = scan(
+        &config.domain,
+        fuzzer_refs.as_slice(),
+        &domain_resolver,
+        config.workers,
+    )
+    .await;
 
-    while let Some(result) = tasks.next().await {
+    while let Some(result) = results.next().await {
         match result {
             Ok((does_resolve, domain)) if does_resolve => {
                 println!("{}", domain);

@@ -3,7 +3,7 @@ use trust_dns_resolver::{
     AsyncResolver,
 };
 
-use crate::domain::prelude::Domain;
+use crate::Domain;
 
 #[derive(Debug, Clone)]
 pub struct DomainResolver {

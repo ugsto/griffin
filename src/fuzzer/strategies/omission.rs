@@ -1,9 +1,10 @@
-use crate::{domain::prelude::*, fuzzer::traits::DomainFuzzer};
+use crate::{fuzzer::traits::DomainFuzzer, Domain};
 
+#[derive(Debug, Default)]
 pub struct OmissionFuzzerStrategy;
 
 impl DomainFuzzer for OmissionFuzzerStrategy {
-    fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
+    fn fuzz<'a>(&self, domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
         let domain_str = domain.domain();
         let tld = domain.top_level_domain();
 
@@ -31,7 +32,9 @@ mod tests {
     fn test_omission_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = OmissionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = OmissionFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "exaple.com",
             "exampe.com",
@@ -56,7 +59,9 @@ mod tests {
     fn test_omission_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = OmissionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = OmissionFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "ub.example.com",
             "subexample.com",
@@ -85,7 +90,9 @@ mod tests {
     fn test_omission_fuzzer_shouldnt_repeat() {
         let domain = Domain::try_from("eexample.com").unwrap();
 
-        let fuzz = OmissionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = OmissionFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "example.com",
             "eeample.com",
@@ -110,7 +117,9 @@ mod tests {
     fn test_omission_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = OmissionFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = OmissionFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [".com"].iter().map(|s| s.to_string()).collect::<Vec<_>>();
 
         assert_eq!(

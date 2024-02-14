@@ -1,4 +1,10 @@
+pub mod enums;
+pub mod errors;
 pub mod strategies;
 pub mod traits;
 
-pub use strategies::*;
+pub mod prelude {
+    use super::*;
+
+    pub use traits::*;
+}

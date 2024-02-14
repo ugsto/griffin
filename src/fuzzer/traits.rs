@@ -1,5 +1,5 @@
-use crate::domain::prelude::*;
+use crate::Domain;
 
 pub trait DomainFuzzer {
-    fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a>;
+    fn fuzz<'a>(&self, domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a>;
 }

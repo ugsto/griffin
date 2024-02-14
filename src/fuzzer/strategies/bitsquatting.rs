@@ -1,10 +1,11 @@
-use crate::{domain::prelude::*, fuzzer::traits::DomainFuzzer};
+use crate::{fuzzer::traits::DomainFuzzer, Domain};
 use itertools::Itertools;
 
+#[derive(Debug, Default)]
 pub struct BitsquattingFuzzerStrategy;
 
 impl DomainFuzzer for BitsquattingFuzzerStrategy {
-    fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
+    fn fuzz<'a>(&self, domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
         let domain_str = domain.domain();
         let tld = domain.top_level_domain();
 
@@ -42,7 +43,9 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "ezample.com",
             "exemple.com",
@@ -93,7 +96,9 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "sub.ezample.com",
             "sub.gxample.com",
@@ -159,7 +164,9 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = ["p.com", "8.com", "y.com", "z.com", "h.com"]
             .iter()
             .map(|s| s.to_string())

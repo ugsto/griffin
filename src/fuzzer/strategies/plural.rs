@@ -1,12 +1,13 @@
+use crate::{fuzzer::traits::DomainFuzzer, Domain};
 use itertools::Itertools;
 
-use crate::{domain::prelude::*, fuzzer::traits::DomainFuzzer};
-
 static SUFFIXES: [&str; 7] = ["s", "x", "z", "ch", "sh", "es", "ies"];
+
+#[derive(Debug, Default)]
 pub struct PluralFuzzerStrategy;
 
 impl DomainFuzzer for PluralFuzzerStrategy {
-    fn fuzz<'a>(domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
+    fn fuzz<'a>(&self, domain: &'a Domain) -> Box<dyn Iterator<Item = String> + 'a> {
         let tld = domain.top_level_domain();
 
         Box::new(
@@ -42,7 +43,9 @@ mod tests {
     fn test_plural_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "examples.com",
             "examplex.com",
@@ -67,7 +70,9 @@ mod tests {
     fn test_plural_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "sub.examples.com",
             "sub.examplex.com",
@@ -99,7 +104,9 @@ mod tests {
     fn test_plural_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::fuzz(&domain).collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy::default()
+            .fuzz(&domain)
+            .collect::<Vec<_>>();
         let expected = [
             "xs.com", "xx.com", "xz.com", "xch.com", "xsh.com", "xes.com", "xies.com",
         ]

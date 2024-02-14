@@ -13,7 +13,7 @@ impl TryFrom<&str> for Domain {
         let base_domain = parts[0..parts.len() - 1]
             .iter()
             .filter(|s| !s.is_empty())
-            .map(|&s| s)
+            .copied()
             .collect::<Vec<&str>>();
         if base_domain.is_empty() {
             return Err(DomainParseError::MissingDomain);
