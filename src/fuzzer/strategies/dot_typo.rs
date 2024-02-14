@@ -34,9 +34,7 @@ mod tests {
     fn test_dot_typo_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = DotTypoFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = DotTypoFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "exampl.e.com",
             "examp.le.com",
@@ -60,9 +58,7 @@ mod tests {
     fn test_dot_typo_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = DotTypoFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = DotTypoFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "s.ub.example.com",
             "su.b.example.com",
@@ -88,9 +84,7 @@ mod tests {
     fn test_dot_typo_fuzzer_shouldnt_repeat() {
         let domain = Domain::try_from("exampl.e.com").unwrap();
 
-        let fuzz = DotTypoFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = DotTypoFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "e.xampl.e.com",
             "ex.ampl.e.com",
@@ -113,9 +107,7 @@ mod tests {
     fn test_dot_typo_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = DotTypoFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = DotTypoFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [];
 
         assert_eq!(

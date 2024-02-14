@@ -33,9 +33,7 @@ mod tests {
     fn test_repetition_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = RepetitionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = RepetitionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "eexample.com",
             "exxample.com",
@@ -60,9 +58,7 @@ mod tests {
     fn test_repetition_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = RepetitionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = RepetitionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "ssub.example.com",
             "suub.example.com",
@@ -90,9 +86,7 @@ mod tests {
     fn test_repetition_fuzzer_shouldnt_repeat() {
         let domain = Domain::try_from("eexample.com").unwrap();
 
-        let fuzz = RepetitionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = RepetitionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "eeexample.com",
             "eexxample.com",
@@ -117,9 +111,7 @@ mod tests {
     fn test_repetition_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = RepetitionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = RepetitionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = ["xx.com"].iter().map(|s| s.to_string()).collect::<Vec<_>>();
 
         assert_eq!(

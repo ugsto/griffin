@@ -34,25 +34,25 @@ pub enum FuzzerStrategy {
 
 impl FuzzerStrategy {
     pub fn new_addition() -> Self {
-        Self::Addition(AdditionFuzzerStrategy::default())
+        Self::Addition(AdditionFuzzerStrategy)
     }
     pub fn new_bitsquatting() -> Self {
-        Self::Bitsquatting(BitsquattingFuzzerStrategy::default())
+        Self::Bitsquatting(BitsquattingFuzzerStrategy)
     }
     pub fn new_dot_typo() -> Self {
-        Self::DotTypo(DotTypoFuzzerStrategy::default())
+        Self::DotTypo(DotTypoFuzzerStrategy)
     }
     pub fn new_hyphen_typo() -> Self {
-        Self::HyphenTypo(HyphenTypoFuzzerStrategy::default())
+        Self::HyphenTypo(HyphenTypoFuzzerStrategy)
     }
     pub fn new_omission() -> Self {
-        Self::Omission(OmissionFuzzerStrategy::default())
+        Self::Omission(OmissionFuzzerStrategy)
     }
     pub fn new_plural() -> Self {
-        Self::Plural(PluralFuzzerStrategy::default())
+        Self::Plural(PluralFuzzerStrategy)
     }
     pub fn new_repetition() -> Self {
-        Self::Repetition(RepetitionFuzzerStrategy::default())
+        Self::Repetition(RepetitionFuzzerStrategy)
     }
 }
 

@@ -25,9 +25,7 @@ mod tests {
     fn test_addition_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = AdditionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = AdditionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "example0.com",
             "example1.com",
@@ -81,9 +79,7 @@ mod tests {
     fn test_addition_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = AdditionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = AdditionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "sub.example0.com",
             "sub.example1.com",
@@ -137,9 +133,7 @@ mod tests {
     fn test_addition_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = AdditionFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = AdditionFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "x0.com", "x1.com", "x2.com", "x3.com", "x4.com", "x5.com", "x6.com", "x7.com",
             "x8.com", "x9.com", "xa.com", "xb.com", "xc.com", "xd.com", "xe.com", "xf.com",

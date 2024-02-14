@@ -43,9 +43,7 @@ mod tests {
     fn test_plural_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "examples.com",
             "examplex.com",
@@ -70,9 +68,7 @@ mod tests {
     fn test_plural_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "sub.examples.com",
             "sub.examplex.com",
@@ -104,9 +100,7 @@ mod tests {
     fn test_plural_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = PluralFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = PluralFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "xs.com", "xx.com", "xz.com", "xch.com", "xsh.com", "xes.com", "xies.com",
         ]

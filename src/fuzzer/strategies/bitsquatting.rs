@@ -43,9 +43,7 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_simple_domain() {
         let domain = Domain::try_from("example.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "ezample.com",
             "exemple.com",
@@ -96,9 +94,7 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_subdomain() {
         let domain = Domain::try_from("sub.example.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = [
             "sub.ezample.com",
             "sub.gxample.com",
@@ -164,9 +160,7 @@ mod tests {
     fn test_bitsquatting_fuzzer_with_single_char() {
         let domain = Domain::try_from("x.com").unwrap();
 
-        let fuzz = BitsquattingFuzzerStrategy::default()
-            .fuzz(&domain)
-            .collect::<Vec<_>>();
+        let fuzz = BitsquattingFuzzerStrategy.fuzz(&domain).collect::<Vec<_>>();
         let expected = ["p.com", "8.com", "y.com", "z.com", "h.com"]
             .iter()
             .map(|s| s.to_string())
